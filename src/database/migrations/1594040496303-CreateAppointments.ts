@@ -1,8 +1,11 @@
-import { MigrationInterface, QueryRunner, Table } from "typeorm";
+import {MigrationInterface, QueryRunner, Table} from "typeorm";
 
-export default class CreateAppointments1593981276433 implements MigrationInterface {
+export class CreateAppointments1594040496303 implements MigrationInterface {
 
   public async up(queryRunner: QueryRunner): Promise<void> {
+
+    await queryRunner.query(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`);
+
     await queryRunner.createTable(
       new Table({
         name: 'appointments',
@@ -11,7 +14,8 @@ export default class CreateAppointments1593981276433 implements MigrationInterfa
             name: 'id',
             type: 'varchar',
             isPrimary: true,
-            generationStrategy: 'uuid'
+            generationStrategy: 'uuid',
+            default: 'uuid_generate_v4()'
           },
           {
             name: 'provider',
@@ -30,6 +34,7 @@ export default class CreateAppointments1593981276433 implements MigrationInterfa
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.dropTable('appointments')
+    await queryRunner.query(`DROP EXTENSION "uuid-ossp"`);
   }
 
 }
