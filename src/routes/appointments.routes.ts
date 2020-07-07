@@ -1,4 +1,4 @@
-import { Router, request } from 'express';
+import { Router } from 'express';
 import { startOfHour, parseISO, isEqual } from 'date-fns';
 import AppointmentsRepository from '../repositories/AppointmentsRepository';
 import CreateAppointmentServices from '../services/CreateAppointmentServices';
@@ -15,14 +15,14 @@ appointmentsRoutes.get('/', async(request, response) => {
 
 appointmentsRoutes.post('/', async (request, response) => {
   try {
-    const { provider, date } = request.body;
+    const { provider_id, date } = request.body;
 
     const parsedDate = startOfHour(parseISO(date));
 
     const createAppointmentServices = new CreateAppointmentServices();
 
     const appointment = await createAppointmentServices.execute({
-      provider,
+      provider_id,
       date: parsedDate
     });
 
