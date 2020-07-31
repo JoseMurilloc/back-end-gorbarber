@@ -4,7 +4,7 @@ import express, { NextFunction, Request, Response } from 'express';
 import 'express-async-errors';
 
 import routes from './routes';
-import uploadConfig from './config/upload';
+import uploadConfig from '../../../config/upload';
 
 import AppError from './errors/AppError'
 import './database';
