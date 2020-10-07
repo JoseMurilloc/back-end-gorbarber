@@ -1,8 +1,11 @@
-import Appointment from '../entities/Appointment';
+import Appointment from '../infra/typeorm/entities/Appointment';
+
 import AppointmentsRepository from '../repositories/AppointmentsRepository';
+
 import { getCustomRepository } from 'typeorm';
 import { startOfHour, parseISO } from 'date-fns';
-import AppError from '../../../shared/infra/http/errors/AppError';
+
+import AppError from '@shared/infra/http/errors/AppError';
 
 interface Request {
   provider_id: string,

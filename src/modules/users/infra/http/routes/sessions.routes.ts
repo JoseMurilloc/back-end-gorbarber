@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import CreateSessionServices from '../../../../modules/users/services/CreateSessionServices';
+import CreateSessionServices from '@modules/users/services/CreateSessionServices';
 
 const sessionsRoutes = Router();
 
@@ -12,7 +12,7 @@ sessionsRoutes.post('/', async (request, response) => {
     password
   })
 
-  delete user.password
+  // delete user.password
 
   return response.json({ user, token });
 
