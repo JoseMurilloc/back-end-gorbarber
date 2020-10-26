@@ -36,5 +36,6 @@
     "import/resolver": {
       "typescript": {}
     }
-  }
+  },
+  "@typescript-eslint/interface-name-prefix": ["error", { "prefixWidth": "always"}]
 }
