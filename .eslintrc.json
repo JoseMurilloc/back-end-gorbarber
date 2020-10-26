@@ -37,5 +37,6 @@
       "typescript": {}
     }
   },
-  "@typescript-eslint/interface-name-prefix": ["error", { "prefixWidth": "always"}]
+  "@typescript-eslint/interface-name-prefix": ["error", { "prefixWidth": "always"}],
+  "no-useless-constructor": "off"
 }
