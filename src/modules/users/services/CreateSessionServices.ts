@@ -6,6 +6,7 @@ import { compare } from 'bcryptjs';
 import authConfig from '@config/auth';
 import AppError from '@shared/infra/http/errors/AppError';
 import IUsersRepositories from '../repositories/IUsersRepositories';
+import { inject, injectable } from 'tsyringe';
 
 interface IRequest {
   email: string;
@@ -16,9 +17,13 @@ interface IResponse {
   token: string;
 }
 
+@injectable()
 class CreateSessionServices {
 
-  constructor(private usersRepository: IUsersRepositories) {}
+  constructor(
+    @inject('UserRepository')
+    private usersRepository: IUsersRepositories
+  ) {}
 
   public async execute({ email, password }: IRequest): Promise<IResponse> {
 

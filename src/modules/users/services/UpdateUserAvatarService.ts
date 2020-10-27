@@ -6,15 +6,20 @@ import uploadConfig from '@config/upload';
 import fs from 'fs';
 import AppError from '@shared/infra/http/errors/AppError';
 import IUsersRepositories from '../repositories/IUsersRepositories';
+import { inject, injectable } from 'tsyringe';
 
 interface IRequest {
   user_id: string;
   avatarFilename: string
 }
 
+@injectable()
 class UpdateUserAvatarService {
 
-  constructor(private usersRepository: IUsersRepositories) {}
+  constructor(
+    @inject('UserRepository')
+    private usersRepository: IUsersRepositories
+  ) {}
 
 
   public async execute({ user_id, avatarFilename }: IRequest): Promise<User> {
