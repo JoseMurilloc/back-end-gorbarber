@@ -1,4 +1,3 @@
-import { getRepository } from 'typeorm';
 import { sign } from 'jsonwebtoken';
 
 import User from '../infra/typeorm/entities/User';
@@ -6,25 +5,24 @@ import User from '../infra/typeorm/entities/User';
 import { compare } from 'bcryptjs';
 import authConfig from '@config/auth';
 import AppError from '@shared/infra/http/errors/AppError';
+import IUsersRepositories from '../repositories/IUsersRepositories';
 
-interface Request {
+interface IRequest {
   email: string;
   password: string;
 }
-interface Response {
+interface IResponse {
   user: User;
   token: string;
 }
 
 class CreateSessionServices {
-  public async execute({ email, password }: Request): Promise<Response> {
-    const userRepository = getRepository(User)
 
-    const user = await userRepository.findOne({
-      where: {
-        email
-      }
-    })
+  constructor(private usersRepository: IUsersRepositories) {}
+
+  public async execute({ email, password }: IRequest): Promise<IResponse> {
+
+    const user = await this.usersRepository.findByEmail(email)
 
     if (!user) {
       throw new AppError('Email or password is invalid combination', 401)

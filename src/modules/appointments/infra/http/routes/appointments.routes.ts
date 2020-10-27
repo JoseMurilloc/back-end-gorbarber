@@ -8,7 +8,6 @@ import AppointmentsRepository from '../../typeorm/repositories/AppointmentsRepos
 
 const appointmentsRoutes = Router();
 
-const appointmentsRepository = new AppointmentsRepository();
 
 appointmentsRoutes.use(ensureAuthenticated);
 
@@ -23,6 +22,8 @@ appointmentsRoutes.post('/', async (request, response) => {
   const { provider_id, date } = request.body;
 
   const parsedDate = startOfHour(parseISO(date));
+  const appointmentsRepository = new AppointmentsRepository();
+
 
   const createAppointmentServices = new CreateAppointmentServices(appointmentsRepository);
 
