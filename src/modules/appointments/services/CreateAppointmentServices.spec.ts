@@ -1,3 +1,4 @@
+import AppError from '@shared/infra/http/errors/AppError';
 import 'reflect-metadata';
 
 import CreateAppointmentServices from './CreateAppointmentServices';
@@ -20,7 +21,24 @@ describe('CreateAppointment', () => {
     expect(appointment.provider_id).toBe('125454966');
   });
 
-  it('should not be able to create two appointments on the sme time', () => {
-    expect(1 + 2).toBe(3);
+  it('should not be able to create two appointments on the sme time', async() => {
+    const fakeAppointmentsRepository = new FakeAppointmentsRepository();
+
+    const createAppointmentServices = new CreateAppointmentServices(
+      fakeAppointmentsRepository
+    );
+
+    const appointmentDate = new Date(2020, 4, 10, 11);
+
+    await createAppointmentServices.execute({
+      date: appointmentDate,
+      provider_id: '125454966'
+    });
+
+    expect(createAppointmentServices.execute({
+      date: appointmentDate,
+      provider_id: '125454966'
+    })).rejects.toBeInstanceOf(AppError)
+
   });
 });
