@@ -1,42 +1,32 @@
-import AppError from '@shared/infra/http/errors/AppError';
 import 'reflect-metadata';
-import CreateUserServices from '@modules/users/services/CreateUserServices';
-import FakeUserRepository from '../infra/typeorm/repositories/fakes/FakeUserRepository';
 
-describe('CreateUser', () => {
-  it('should be able to create a new user', async () => {
+import CreateSession from '@modules/users/services/CreateSessionServices';
+import FakeUserRepository from '../infra/typeorm/repositories/fakes/FakeUserRepository';
+import CreateUserServices from './CreateUserServices';
+
+describe('SessionUser', () => {
+  it('should be able to authentication', async () => {
     const fakeUsersRepository = new FakeUserRepository();
 
     const createUser = new CreateUserServices(
       fakeUsersRepository
+    )
+
+    const authenticationUser = new CreateSession(
+      fakeUsersRepository
     );
 
-    const user = await createUser.execute({
-      name: 'Jonh Doe',
+    await createUser.execute({
+      name: 'John doe',
+      email: 'john@gmail.com',
+      password: '123456'
+    })
+
+    const response = await authenticationUser.execute({
       email: 'john@gmail.com',
       password: '123456'
     });
 
-    expect(user).toHaveProperty('id');
+    expect(response).toHaveProperty('token');
   });
-});
-
-it('should not be able to create a new user with same email from another', async () => {
-  const fakeUsersRepository = new FakeUserRepository();
-
-  const createUser = new CreateUserServices(
-    fakeUsersRepository
-  );
-
-  const user = await createUser.execute({
-    name: 'Jonh Doe',
-    email: 'john@gmail.com',
-    password: '123456'
-  });
-
-  expect(createUser.execute({
-    name: 'Jonh Doe',
-    email: 'john@gmail.com',
-    password: '123456'
-  })).rejects.toBeInstanceOf(AppError)
 });
