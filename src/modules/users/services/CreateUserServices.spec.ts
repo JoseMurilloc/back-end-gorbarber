@@ -4,6 +4,7 @@ import CreateSession from '@modules/users/services/CreateSessionServices';
 import FakeUserRepository from '../infra/typeorm/repositories/fakes/FakeUserRepository';
 import CreateUserServices from './CreateUserServices';
 import FakeHashProvider from '../providers/HashProvider/fakes/FakeHashProvider';
+import AppError from '@shared/infra/http/errors/AppError';
 
 
 describe('SessionUser', () => {
@@ -33,5 +34,30 @@ describe('SessionUser', () => {
     });
 
     expect(response).toHaveProperty('token');
+  });
+
+  it('should not be able to create a new user with same email from another', async () => {
+
+    const fakeUsersRepository = new FakeUserRepository();
+    const fakeHashProvider = new FakeHashProvider();
+
+    const createUser = new CreateUserServices(
+      fakeUsersRepository,
+      fakeHashProvider
+    )
+
+    await createUser.execute({
+      name: 'John Doe',
+      email: 'johndoe@example.com',
+      password: '123456',
+    });
+
+    await expect(
+      createUser.execute({
+        name: 'John Doe',
+        email: 'johndoe@example.com',
+        password: '123456',
+      }),
+    ).rejects.toBeInstanceOf(AppError);
   });
 });
