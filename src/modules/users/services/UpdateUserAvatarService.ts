@@ -1,9 +1,4 @@
-import { getRepository } from 'typeorm';
-import path from 'path'
-
 import User from '../infra/typeorm/entities/User';
-import uploadConfig from '@config/upload';
-import fs from 'fs';
 import AppError from '@shared/infra/http/errors/AppError';
 import IUsersRepositories from '../repositories/IUsersRepositories';
 import { inject, injectable } from 'tsyringe';
