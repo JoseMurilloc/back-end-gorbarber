@@ -50,7 +50,7 @@ class ResetPasswordServices {
     }
 
     user.password = await this.hashProvider.generateHash(password);
-    user.password = password
+
     await this.usersRepository.save(user);
   }
 }
