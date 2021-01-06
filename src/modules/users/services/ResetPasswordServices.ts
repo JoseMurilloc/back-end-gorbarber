@@ -1,9 +1,12 @@
 import AppError from '@shared/infra/http/errors/AppError';
 import IUsersRepositories from '@modules/users/repositories/IUsersRepositories';
 
-// cSpell:disable
 import { inject, injectable } from 'tsyringe';
 import IUserTokensRepositories from '../infra/typeorm/repositories/IUserTokensRepositories';
+import IHashProvider from '../providers/HashProvider/models/IHashProvider';
+import { addHours, isAfter } from 'date-fns';
+
+// import BCryptHashProvider from '@modules/users/providers/HashProvider/implementations/BCryptHashProvider';
 
 interface IRequest {
   password: string;
@@ -19,7 +22,10 @@ class ResetPasswordServices {
     private usersRepository: IUsersRepositories,
 
     @inject('UserTokensRepository')
-    private userTokensRepository: IUserTokensRepositories
+    private userTokensRepository: IUserTokensRepositories,
+
+    @inject('HashProvider')
+    private hashProvider: IHashProvider
   ) {}
 
 
@@ -36,8 +42,15 @@ class ResetPasswordServices {
       throw new AppError('User not exists')
     }
 
-    user.password = password;
+    const tokenCreatedAt = userToken.created_at;
+    const compareDate = addHours(tokenCreatedAt, 2);
 
+    if (isAfter(Date.now(), compareDate)) {
+      throw new AppError('Token expired.');
+    }
+
+    user.password = await this.hashProvider.generateHash(password);
+    user.password = password
     await this.usersRepository.save(user);
   }
 }
