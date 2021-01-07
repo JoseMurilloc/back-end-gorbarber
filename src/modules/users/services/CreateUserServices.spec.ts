@@ -6,17 +6,19 @@ import CreateUserServices from './CreateUserServices';
 import FakeHashProvider from '../providers/HashProvider/fakes/FakeHashProvider';
 import AppError from '@shared/infra/http/errors/AppError';
 
+let fakeUsersRepository: FakeUserRepository;
+let fakeHashProvider: FakeHashProvider;
+let createUser: CreateUserServices;
 
 describe('SessionUser', () => {
+
+  beforeEach(() => {
+    fakeUsersRepository = new FakeUserRepository();
+    fakeHashProvider = new FakeHashProvider();
+    createUser = new CreateUserServices(fakeUsersRepository, fakeHashProvider);
+  });
+
   it('should be able to authentication', async () => {
-    const fakeUsersRepository = new FakeUserRepository();
-    const fakeHashProvider = new FakeHashProvider();
-
-    const createUser = new CreateUserServices(
-      fakeUsersRepository,
-      fakeHashProvider
-    )
-
     const authenticationUser = new CreateSession(
       fakeUsersRepository,
       fakeHashProvider
@@ -37,15 +39,6 @@ describe('SessionUser', () => {
   });
 
   it('should not be able to create a new user with same email from another', async () => {
-
-    const fakeUsersRepository = new FakeUserRepository();
-    const fakeHashProvider = new FakeHashProvider();
-
-    const createUser = new CreateUserServices(
-      fakeUsersRepository,
-      fakeHashProvider
-    )
-
     await createUser.execute({
       name: 'John Doe',
       email: 'johndoe@example.com',
