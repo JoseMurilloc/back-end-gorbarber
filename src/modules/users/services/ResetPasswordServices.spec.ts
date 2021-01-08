@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+
 import AppError from '@shared/infra/http/errors/AppError';
 import FakeUserRepository from '../infra/typeorm/repositories/fakes/FakeUserRepository'
 import FakeUserTokensRepository from '../infra/typeorm/repositories/fakes/FakeUserTokenRepository';
