@@ -8,7 +8,8 @@ import AppError from '@shared/infra/http/errors/AppError';
 
 interface IRequest {
   provider_id: string,
-  date: Date
+  date: Date;
+  user_id: string;
 }
 
 
@@ -24,7 +25,7 @@ class CreateAppointmentServices {
     private appointmentsRepository: IAppointmentsRepositories
   ) {}
 
-  public async execute({ provider_id, date }: IRequest): Promise<Appointment> {
+  public async execute({ provider_id, date, user_id }: IRequest): Promise<Appointment> {
 
     const appointmentDate = startOfHour(date);
 
@@ -37,6 +38,7 @@ class CreateAppointmentServices {
     const appointment = await this.appointmentsRepository.create({
       provider_id,
       date: appointmentDate,
+      user_id
     });
 
 

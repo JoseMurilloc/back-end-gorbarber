@@ -7,16 +7,17 @@ import AppointmentsRepository from '../../typeorm/repositories/AppointmentsRepos
 class AppointmentsController {
   public async create(request: Request, response: Response): Promise<Response> {
     const { provider_id, date } = request.body;
+    const user_id = request.user.id;
 
     const parsedDate = startOfHour(parseISO(date));
-    const appointmentsRepository = new AppointmentsRepository();
 
 
     const createAppointmentServices = container.resolve(CreateAppointmentServices);
 
     const appointment = await createAppointmentServices.execute({
       provider_id,
-      date: parsedDate
+      date: parsedDate,
+      user_id
     });
 
     return response.json(appointment);
